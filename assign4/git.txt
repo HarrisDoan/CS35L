@@ -1,0 +1,7 @@
+Differences:
+
+- Eggert's repo has more branches. It contains the branches: maint, master, next, seen, todo.
+
+- My copy had - master
+
+- Another difference was the last commit date. This could be a result of Eggert not pulling from the original online git repository.

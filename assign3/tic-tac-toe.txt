@@ -1,0 +1,15 @@
+1.) First you begin by obtaining the source code from the React tutorial website.
+
+2.) Then use the scp command to add it to the seasnet server.
+
+3.) Then in the terminal of VSCode, I used 'npm install' to install what depdendencies I needed to run the app. And then I used 'npm start' to start the program in a locally hosted enviornment.
+
+4.) First there was in error in which 'React must be in scope when using JSX react'. And then there was the issue of stack overflow. To fix this, I needed to import React from 'react' at the very top of the .js
+
+5.) The <> in the html had an error, fixed it by a simple change to <div>
+
+6.) While locally hosted in the browser, I checked for correct functionality using the command F12.
+
+7.) Upon completion of the interactivity step with the onClick, I checked functionality in the browser.
+
+8.) The game was then complete.

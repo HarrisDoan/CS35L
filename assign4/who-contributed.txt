@@ -1,0 +1,1119 @@
+1.) First from my home, I cd into desktop and then cd into tz which was the copy of the repo folder sitting on my desktop.
+
+harrisdoan@s-164-67-81-219 ~ % cd Desktop
+harrisdoan@s-164-67-81-219 Desktop % cd tz
+harrisdoan@s-164-67-81-219 tz % ls
+
+2.) Then I can do a grep expression to find exactly when that instance occured in the repo:
+
+grep -n "Even newspaper reports present contradictory information." *
+
+The space at the end of the star is very important. Can't forget that
+
+3.) From then it produced this result:
+
+harrisdoan@s-164-67-81-219 tz % grep -n "Even newspaper reports present contradictory information." *
+northamerica:900:# and wrote "Even newspaper reports present contradictory information."
+
+
+4.) Now with a name and number, I can use the command git blame to find more on this specific commit.
+
+git blame -L 900 northamerica
+
+
+5.) I got this long result:
+
+c8f960ec7 (Paul Eggert        2013-09-02 08:09:06 -0700  900) # and wrote "Even newspaper reports present contradictory information."
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  901) # Those Hoosiers!  Such a flighty and changeable people!
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  902) # Fortunately, most of the complexity occurred before our cutoff date of 1970.
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  903) #
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  904) # Other than Indianapolis, the Indiana place names are so nondescript
+c8f960ec7 (Paul Eggert        2013-09-02 08:09:06 -0700  905) # that they would be ambiguous if we left them at the 'America' level.
+c8f960ec7 (Paul Eggert        2013-09-02 08:09:06 -0700  906) # So we reluctantly put them all in a subdirectory 'America/Indiana'.
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500  907) 
+0e07c140e (Paul Eggert        2014-06-26 10:07:15 -0700  908) # From Paul Eggert (2014-06-26):
+0e07c140e (Paul Eggert        2014-06-26 10:07:15 -0700  909) # https://www.federalregister.gov/articles/2006/01/20/06-563/standard-time-zone-boundary-in-the-state-of-indiana
+0e07c140e (Paul Eggert        2014-06-26 10:07:15 -0700  910) # says "DOT is relocating the time zone boundary in Indiana to move Starke,
+c344c562c (Arthur David Olson 2006-01-30 08:59:12 -0500  911) # Pulaski, Knox, Daviess, Martin, Pike, Dubois, and Perry Counties from the
+
+And from this I can see that specifically:
+
+"c8f960ec7 (Paul Eggert)" made this exact commit.
+
+6.) Now with the specific commit ID, I can use git show to see exactly what happened:
+
+git show c8f960ec7
+
+tica
+index 4cb74766..234e59c3 100644
+--- a/antarctica
++++ b/antarctica
+@@ -16,9 +16,9 @@
+ #
+  # Except for the French entries,
+   # I made up all time zone abbreviations mentioned here; corrections welcome!
+   -# FORMAT is `zzz' and GMTOFF is 0 for locations while uninhabited.
+   +# FORMAT is 'zzz' and GMTOFF is 0 for locations while uninhabited.
+
+-# These rules are stolen from the `southamerica' file.
++# These rules are stolen from the 'southamerica' file.
+ # Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER/S
+  Rule   ArgAQ   1964    1966    -       Mar      1      0:00    0       -
+   Rule   ArgAQ   1964    1966    -       Oct     15      0:00    1:00    S
+   @@ -231,7 +231,7 @@ Zone Antarctica/Syowa       0       -       zzz     1957 Jan 29
+    # Scott Base, Ross Island, since 1957-01.
+     # See Pacific/Auckland.
+      #
+      -# These rules for New Zealand are stolen from the `australasia' file.
+      +# These rules for New Zealand are stolen from the 'australasia' file.
+       # Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER/S
+        Rule   NZAQ    1974    only    -       Nov      3      2:00s   1:00    D
+	 Rule   NZAQ    1975    1988    -       Oct     lastSun 2:00s   1:00    D
+	 @@ -269,11 +269,11 @@ Rule      NZAQ    2008    max     -       Apr     Sun>=1  2:00s   0       S
+	  # From Lee Hotz (2001-03-08):
+	   # I queried the folks at Columbia who spent the summer at Vostok and this is
+	    # what they had to say about time there:
+	    -# ``in the US Camp (East Camp) we have been on New Zealand (McMurdo)
+	    +# "in the US Camp (East Camp) we have been on New Zealand (McMurdo)
+	     # time, which is 12 hours ahead of GMT. The Russian Station Vostok was
+	      # 6 hours behind that (although only 2 miles away, i.e. 6 hours ahead
+	      :
+	      ~
+
+7.) I found out the truth was actually Paul Eggert did this: Change "`" to "'"; these days, "`" and "'" are not symmetric. This was referring to the line of infringement.
+
+So I decided to dig deeper and used the command: git blame c8f960ec7~ northamerica -> which produced this:
+
+harrisdoan@s-164-67-81-219 tz % git blame c8f960ec7~ northamerica
+
+f5ebe7acf (Arthur David Olson 2005-12-13 10:34:14 -0500    1) # <pre>
+397524bc6 (Arthur David Olson 2009-05-17 14:32:57 -0400    2) # This file is in the public domain, so clarified as of
+397524bc6 (Arthur David Olson 2009-05-17 14:32:57 -0400    3) # 2009-05-17 by Arthur David Olson.
+f5ebe7acf (Arthur David Olson 2005-12-13 10:34:14 -0500    4) 
+b418f4fa5 (Arthur David Olson 1993-11-22 12:27:02 -0500    5) # also includes Central America and the Caribbean
+b418f4fa5 (Arthur David Olson 1993-11-22 12:27:02 -0500    6) 
+b418f4fa5 (Arthur David Olson 1993-11-22 12:27:02 -0500    7) # This data is by no means authoritative; if you think you know better,
+b418f4fa5 (Arthur David Olson 1993-11-22 12:27:02 -0500    8) # go ahead and edit the file (and please send any changes to
+bd6e30428 (Paul Eggert        2012-11-09 17:45:58 -0800    9) # tz@iana.org for general use in the future).
+1c4fb1411 (Arthur David Olson 1986-03-02 21:03:02 -0500   10) 
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   11) # From Paul Eggert (1999-03-22):
+6a1980c96 (Arthur David Olson 1994-08-20 12:55:19 -0400   12) # A reliable and entertaining source about time zones is
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   13) # Derek Howse, Greenwich time and longitude, Philip Wilson Publishers (1997).
+6a1980c96 (Arthur David Olson 1994-08-20 12:55:19 -0400   14) 
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500   15) ###############################################################################
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500   16) 
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500   17) # United States
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500   18) 
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   19) # From Paul Eggert (1999-03-31):
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   20) # Howse writes (pp 121-125) that time zones were invented by
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   21) # Professor Charles Ferdinand Dowd (1825-1904),
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   22) # Principal of Temple Grove Ladies' Seminary (Saratoga Springs, NY).
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   23) # His pamphlet ``A System of National Time for Railroads'' (1870)
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   24) # was the result of his proposals at the Convention of Railroad Trunk Lines
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   25) # in New York City (1869-10).  His 1870 proposal was based on Washington, DC,
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   26) # but in 1872-05 he moved the proposed origin to Greenwich.
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   27) # His proposal was adopted by the railroads on 1883-11-18 at 12:00,
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   28) # and the most of the country soon followed suit.
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   29) 
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   30) # From Paul Eggert (2005-04-16):
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   31) # That 1883 transition occurred at 12:00 new time, not at 12:00 old time.
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   32) # See p 46 of David Prerau, Seize the daylight, Thunder's Mouth Press (2005).
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   33) 
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400   34) # From Paul Eggert (2006-03-22):
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   35) # A good source for time zone historical data in the US is
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   36) # Thomas G. Shanks, The American Atlas (5th edition),
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   37) # San Diego: ACS Publications, Inc. (1991).
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   38) # Make sure you have the errata sheet; the book is somewhat useless without it.
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400   39) # It is the source for most of the pre-1991 US entries below.
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   40) 
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500   41) # From Paul Eggert (2001-03-06):
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   42) # Daylight Saving Time was first suggested as a joke by Benjamin Franklin
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500   43) # in his whimsical essay ``An Economical Project for Diminishing the Cost
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500   44) # of Light'' published in the Journal de Paris (1784-04-26).
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   45) # Not everyone is happy with the results:
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   46) #
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   47) # I don't really care how time is reckoned so long as there is some
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   48) # agreement about it, but I object to being told that I am saving
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   49) # daylight when my reason tells me that I am doing nothing of the kind.
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   50) # I even object to the implication that I am wasting something
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   51) # valuable if I stay in bed after the sun has risen.  As an admirer
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   52) # of moonlight I resent the bossy insistence of those who want to
+...
+
+
+This was the larger list I investigated:
+, Santa Rosa, Walton, and
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  298) # Washington counties), Illinois, western Indiana
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  299) # (Gibson, Jasper, Lake, LaPorte, Newton, Porter, Posey, Spencer,
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  300) # Vanderburgh, and Warrick counties), Iowa, most of Kansas, western
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  301) # Kentucky, Louisiana, Minnesota, Mississippi, Missouri, eastern
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  302) # Nebraska, eastern North Dakota, Oklahoma, eastern South Dakota,
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  303) # western Tennessee, most of Texas, Wisconsin
+1bfc67426 (Arthur David Olson 2000-10-03 12:57:35 -0400  304)
+d3723948c (Arthur David Olson 2006-05-01 09:44:41 -0400  305) # From Larry M. Smith (2006-04-26) re Wisconsin:
+d3723948c (Arthur David Olson 2006-05-01 09:44:41 -0400  306) # http://www.legis.state.wi.us/statutes/Stat0175.pdf ...
+d3723948c (Arthur David Olson 2006-05-01 09:44:41 -0400  307) # is currently enforced at the 01:00 time of change.  Because the local
+d3723948c (Arthur David Olson 2006-05-01 09:44:41 -0400  308) # "bar time" in the state corresponds to 02:00, a number of citations
+d3723948c (Arthur David Olson 2006-05-01 09:44:41 -0400  309) # are issued for the "sale of class 'B' alcohol after prohibited
+d3723948c (Arthur David Olson 2006-05-01 09:44:41 -0400  310) # hours" within the deviated hour of this change every year....
+efe296750 (Arthur David Olson 2007-03-15 09:51:24 -0400  311) #
+efe296750 (Arthur David Olson 2007-03-15 09:51:24 -0400  312) # From Douglas R. Bomberg (2007-03-12):
+efe296750 (Arthur David Olson 2007-03-15 09:51:24 -0400  313) # Wisconsin has enacted (nearly eleventh-hour) legislation to get WI
+efe296750 (Arthur David Olson 2007-03-15 09:51:24 -0400  314) # Statue 175 closer in synch with the US Congress' intent....
+efe296750 (Arthur David Olson 2007-03-15 09:51:24 -0400  315) # http://www.legis.state.wi.us/2007/data/acts/07Act3.pdf
+d3723948c (Arthur David Olson 2006-05-01 09:44:41 -0400  316)
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  317) # Rule    NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  318) Rule      Chicago 1920    only    -       Jun     13      2:00    1:00    D
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  319) Rule      Chicago 1920    1921    -       Oct     lastSun 2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  320) Rule      Chicago 1921    only    -       Mar     lastSun 2:00    1:00    D
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  321) Rule      Chicago 1922    1966    -       Apr     lastSun 2:00    1:00    D
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  322) Rule      Chicago 1922    1954    -       Sep     lastSun 2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  323) Rule      Chicago 1955    1966    -       Oct     lastSun 2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  324) # Zone    NAME            GMTOFF  RULES   FORMAT  [UNTIL]
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400  325) Zone America/Chicago      -5:50:36 -      LMT     1883 Nov 18 12:09:24
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  326)                   -6:00   US      C%sT    1920
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  327)                   -6:00   Chicago C%sT    1936 Mar  1 2:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  328)                   -5:00   -       EST     1936 Nov 15 2:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  329)                   -6:00   Chicago C%sT    1942
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  330)                   -6:00   US      C%sT    1946
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  331)                   -6:00   Chicago C%sT    1967
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  332)                   -6:00   US      C%sT
+efe9328ef (Arthur David Olson 2001-10-09 13:31:23 -0400  333) # Oliver County, ND switched from mountain to central time on 1992-10-25.
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400  334) Zone America/North_Dakota/Center -6:45:12 - LMT   1883 Nov 18 12:14:48
+efe9328ef (Arthur David Olson 2001-10-09 13:31:23 -0400  335)                   -7:00   US      M%sT    1992 Oct 25 02:00
+efe9328ef (Arthur David Olson 2001-10-09 13:31:23 -0400  336)                   -6:00   US      C%sT
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  337) # Morton County, ND, switched from mountain to central time on
+d3723948c (Arthur David Olson 2006-05-01 09:44:41 -0400  338) # 2003-10-26, except for the area around Mandan which was already central time.
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  339) # See <http://dmses.dot.gov/docimages/p63/135818.pdf>.
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  340) # Officially this switch also included part of Sioux County, and
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  341) # Jones, Mellette, and Todd Counties in South Dakota;
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  342) # but in practice these other counties were already observing central time.
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  343) # See <http://www.epa.gov/fedrgstr/EPA-IMPACT/2003/October/Day-28/i27056.htm>.
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  344) Zone America/North_Dakota/New_Salem -6:45:39 - LMT 1883 Nov 18 12:14:21
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  345)                   -7:00   US      M%sT    2003 Oct 26 02:00
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  346)                   -6:00   US      C%sT
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  347)
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  348) # From Josh Findley (2011-01-21):
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  349) # ...it appears that Mercer County, North Dakota, changed from the
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  350) # mountain time zone to the central time zone at the last transition from
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  351) # daylight-saving to standard time (on Nov. 7, 2010):
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  352) # <a href="http://www.gpo.gov/fdsys/pkg/FR-2010-09-29/html/2010-24376.htm">
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  353) # http://www.gpo.gov/fdsys/pkg/FR-2010-09-29/html/2010-24376.htm
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  354) # </a>
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  355) # <a href="http://www.bismarcktribune.com/news/local/article_1eb1b588-c758-11df-b472-001cc4c03286.html">
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  356) # http://www.bismarcktribune.com/news/local/article_1eb1b588-c758-11df-b472-001cc4c03286.html
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  357) # </a>
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  358)
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  359) # From Andy Lipscomb (2011-01-24):
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  360) # ...according to the Census Bureau, the largest city is Beulah (although
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  361) # it's commonly referred to as Beulah-Hazen, with Hazen being the next
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  362) # largest city in Mercer County).  Google Maps places Beulah's city hall
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  363) # at 4715'51" north, 10146'40" west, which yields an offset of 6h47'07".
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  364)
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  365) Zone America/North_Dakota/Beulah -6:47:07 - LMT 1883 Nov 18 12:12:53
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  366)                   -7:00   US      M%sT    2010 Nov  7 2:00
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  367)                   -6:00   US      C%sT
+2fbc1efcf (Arthur David Olson 2011-01-26 17:13:48 -0500  368)
+efe9328ef (Arthur David Olson 2001-10-09 13:31:23 -0400  369) # US mountain time, represented by Denver
+1bfc67426 (Arthur David Olson 2000-10-03 12:57:35 -0400  370) #
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  371) # Colorado, far western Kansas, Montana, western
+efe9328ef (Arthur David Olson 2001-10-09 13:31:23 -0400  372) # Nebraska, Nevada border (Jackpot, Owyhee, and Mountain City),
+63b23003f (Arthur David Olson 2007-08-20 10:45:09 -0400  373) # New Mexico, southwestern North Dakota,
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500  374) # western South Dakota, far western Texas (El Paso County, Hudspeth County,
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500  375) # and Pine Springs and Nickel Creek in Culberson County), Utah, Wyoming
+1bfc67426 (Arthur David Olson 2000-10-03 12:57:35 -0400  376) #
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  377) # Rule    NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  378) Rule      Denver  1920    1921    -       Mar     lastSun 2:00    1:00    D
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  379) Rule      Denver  1920    only    -       Oct     lastSun 2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  380) Rule      Denver  1921    only    -       May     22      2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  381) Rule      Denver  1965    1966    -       Apr     lastSun 2:00    1:00    D
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  382) Rule      Denver  1965    1966    -       Oct     lastSun 2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  383) # Zone    NAME            GMTOFF  RULES   FORMAT  [UNTIL]
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400  384) Zone America/Denver       -6:59:56 -      LMT     1883 Nov 18 12:00:04
+e5dd7ec8d (Arthur David Olson 1996-04-19 14:36:53 -0400  385)                   -7:00   US      M%sT    1920
+e5dd7ec8d (Arthur David Olson 1996-04-19 14:36:53 -0400  386)                   -7:00   Denver  M%sT    1942
+e5dd7ec8d (Arthur David Olson 1996-04-19 14:36:53 -0400  387)                   -7:00   US      M%sT    1946
+e5dd7ec8d (Arthur David Olson 1996-04-19 14:36:53 -0400  388)                   -7:00   Denver  M%sT    1967
+e5dd7ec8d (Arthur David Olson 1996-04-19 14:36:53 -0400  389)                   -7:00   US      M%sT
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  390)
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  391) # US Pacific time, represented by Los Angeles
+1bfc67426 (Arthur David Olson 2000-10-03 12:57:35 -0400  392) #
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  393) # California, northern Idaho (Benewah, Bonner, Boundary, Clearwater,
+63b23003f (Arthur David Olson 2007-08-20 10:45:09 -0400  394) # Idaho, Kootenai, Latah, Lewis, Nez Perce, and Shoshone counties,
+63b23003f (Arthur David Olson 2007-08-20 10:45:09 -0400  395) # and the northern three-quarters of Idaho county),
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  396) # most of Nevada, most of Oregon, and Washington
+1bfc67426 (Arthur David Olson 2000-10-03 12:57:35 -0400  397) #
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  398) # Rule    NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  399) Rule      CA      1948    only    -       Mar     14      2:00    1:00    D
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  400) Rule      CA      1949    only    -       Jan      1      2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  401) Rule      CA      1950    1966    -       Apr     lastSun 2:00    1:00    D
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  402) Rule      CA      1950    1961    -       Sep     lastSun 2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  403) Rule      CA      1962    1966    -       Oct     lastSun 2:00    0       S
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  404) # Zone    NAME            GMTOFF  RULES   FORMAT  [UNTIL]
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400  405) Zone America/Los_Angeles -7:52:58 -       LMT     1883 Nov 18 12:07:02
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  406)                   -8:00   US      P%sT    1946
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  407)                   -8:00   CA      P%sT    1967
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  408)                   -8:00   US      P%sT
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500  409)
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  410) # Alaska
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  411) # AK%sT is the modern abbreviation for -9:00 per USNO.
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  412) #
+74d306426 (Arthur David Olson 2001-06-05 13:48:17 -0400  413) # From Paul Eggert (2001-05-30):
+6a1980c96 (Arthur David Olson 1994-08-20 12:55:19 -0400  414) # Howse writes that Alaska switched from the Julian to the Gregorian calendar,
+f85d4deee (Arthur David Olson 1996-09-08 15:51:01 -0400  415) # and from east-of-GMT to west-of-GMT days, when the US bought it from Russia.
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  416) # This was on 1867-10-18, a Friday; the previous day was 1867-10-06 Julian,
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  417) # also a Friday.  Include only the time zone part of this transition,
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  418) # ignoring the switch from Julian to Gregorian, since we can't represent
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  419) # the Julian calendar.
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  420) #
+74d306426 (Arthur David Olson 2001-06-05 13:48:17 -0400  421) # As far as we know, none of the exact locations mentioned below were
+74d306426 (Arthur David Olson 2001-06-05 13:48:17 -0400  422) # permanently inhabited in 1867 by anyone using either calendar.
+74d306426 (Arthur David Olson 2001-06-05 13:48:17 -0400  423) # (Yakutat was colonized by the Russians in 1799, but the settlement
+74d306426 (Arthur David Olson 2001-06-05 13:48:17 -0400  424) # was destroyed in 1805 by a Yakutat-kon war party.)  However, there
+74d306426 (Arthur David Olson 2001-06-05 13:48:17 -0400  425) # were nearby inhabitants in some cases and for our purposes perhaps
+74d306426 (Arthur David Olson 2001-06-05 13:48:17 -0400  426) # it's best to simply use the official transition.
+74d306426 (Arthur David Olson 2001-06-05 13:48:17 -0400  427) #
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  428)
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  429) # From Steve Ferguson (2011-01-31):
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  430) # The author lives in Alaska and many of the references listed are only
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  431) # available to Alaskan residents.
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  432) #
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  433) # <a href="http://www.alaskahistoricalsociety.org/index.cfm?section=discover%20alaska&page=Glimpses%20of%20the%20Past&viewpost=2&ContentId=98">
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  434) # http://www.alaskahistoricalsociety.org/index.cfm?section=discover%20alaska&page=Glimpses%20of%20the%20Past&viewpost=2&ContentId=98
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  435) # </a>
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  436)
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  437) # From Arthur David Olson (2011-02-01):
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  438) # Here's database-relevant material from the 2001 "Alaska History" article:
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  439) #
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  440) # On September 20 [1979]...DOT...officials decreed that on April 27,
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  441) # 1980, Juneau and other nearby communities would move to Yukon Time.
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  442) # Sitka, Petersburg, Wrangell, and Ketchikan, however, would remain on
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  443) # Pacific Time.
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  444) #
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  445) # ...on September 22, 1980, DOT Secretary Neil E. Goldschmidt rescinded the
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  446) # Department's September 1979 decision. Juneau and other communities in
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  447) # northern Southeast reverted to Pacific Time on October 26.
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  448) #
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  449) # On October 28 [1983]...the Metlakatla Indian Community Council voted
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  450) # unanimously to keep the reservation on Pacific Time.
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  451) #
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  452) # According to DOT official Joanne Petrie, Indian reservations are not
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  453) # bound to follow time zones imposed by neighboring jurisdictions.
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  454) #
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  455) # (The last is consistent with how the database now handles the Navajo
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  456) # Nation.)
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  457)
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  458) # From Arthur David Olson (2011-02-09):
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  459) # I just spoke by phone with a staff member at the Metlakatla Indian
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  460) # Community office (using contact information available at
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  461) # <a href="http://www.commerce.state.ak.us/dca/commdb/CIS.cfm?Comm_Boro_name=Metlakatla">
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  462) # http://www.commerce.state.ak.us/dca/commdb/CIS.cfm?Comm_Boro_name=Metlakatla
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  463) # </a>).
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  464) # It's shortly after 1:00 here on the east coast of the United States;
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  465) # the staffer said it was shortly after 10:00 there. When I asked whether
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  466) # that meant they were on Pacific time, they said no--they were on their
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  467) # own time. I asked about daylight saving; they said it wasn't used. I
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  468) # did not inquire about practices in the past.
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  469)
+562e552f0 (Arthur David Olson 2011-08-17 11:59:37 -0400  470) # From Arthur David Olson (2011-08-17):
+562e552f0 (Arthur David Olson 2011-08-17 11:59:37 -0400  471) # For lack of better information, assume that Metlakatla's
+562e552f0 (Arthur David Olson 2011-08-17 11:59:37 -0400  472) # abandonment of use of daylight saving resulted from the 1983 vote.
+562e552f0 (Arthur David Olson 2011-08-17 11:59:37 -0400  473)
+b418f4fa5 (Arthur David Olson 1993-11-22 12:27:02 -0500  474) # Zone    NAME            GMTOFF  RULES   FORMAT  [UNTIL]
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  475) Zone America/Juneau        15:02:19 -     LMT     1867 Oct 18
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  476)                    -8:57:41 -     LMT     1900 Aug 20 12:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  477)                    -8:00  -       PST     1942
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  478)                    -8:00  US      P%sT    1946
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  479)                    -8:00  -       PST     1969
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  480)                    -8:00  US      P%sT    1980 Apr 27 2:00
+369851954 (Paul Eggert        2012-07-25 07:13:46 -0700  481)                    -9:00  US      Y%sT    1980 Oct 26 2:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  482)                    -8:00  US      P%sT    1983 Oct 30 2:00
+c70861586 (Arthur David Olson 2004-05-27 12:00:29 -0400  483)                    -9:00  US      Y%sT    1983 Nov 30
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  484)                    -9:00  US      AK%sT
+79fae8ff5 (Arthur David Olson 2012-03-03 12:39:57 -0500  485) Zone America/Sitka         14:58:47 -     LMT     1867 Oct 18
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  486)                    -9:01:13 -     LMT     1900 Aug 20 12:00
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  487)                    -8:00  -       PST     1942
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  488)                    -8:00  US      P%sT    1946
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  489)                    -8:00  -       PST     1969
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  490)                    -8:00  US      P%sT    1983 Oct 30 2:00
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  491)                    -9:00  US      Y%sT    1983 Nov 30
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  492)                    -9:00  US      AK%sT
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  493) Zone America/Metlakatla    15:13:42 -     LMT     1867 Oct 18
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  494)                    -8:46:18 -     LMT     1900 Aug 20 12:00
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  495)                    -8:00  -       PST     1942
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  496)                    -8:00  US      P%sT    1946
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  497)                    -8:00  -       PST     1969
+7581bd53c (Arthur David Olson 2011-02-09 14:00:33 -0500  498)                    -8:00  US      P%sT    1983 Oct 30 2:00
+562e552f0 (Arthur David Olson 2011-08-17 11:59:37 -0400  499)                    -8:00  -       MeST
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  500) Zone America/Yakutat       14:41:05 -     LMT     1867 Oct 18
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  501)                    -9:18:55 -     LMT     1900 Aug 20 12:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  502)                    -9:00  -       YST     1942
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  503)                    -9:00  US      Y%sT    1946
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  504)                    -9:00  -       YST     1969
+c70861586 (Arthur David Olson 2004-05-27 12:00:29 -0400  505)                    -9:00  US      Y%sT    1983 Nov 30
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  506)                    -9:00  US      AK%sT
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  507) Zone America/Anchorage     14:00:24 -     LMT     1867 Oct 18
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  508)                    -9:59:36 -     LMT     1900 Aug 20 12:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  509)                   -10:00  -       CAT     1942
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  510)                   -10:00  US      CAT/CAWT 1945 Aug 14 23:00u
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  511)                   -10:00  US      CAT/CAPT 1946 # Peace
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  512)                   -10:00  -       CAT     1967 Apr
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  513)                   -10:00  -       AHST    1969
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  514)                   -10:00  US      AH%sT   1983 Oct 30 2:00
+c70861586 (Arthur David Olson 2004-05-27 12:00:29 -0400  515)                    -9:00  US      Y%sT    1983 Nov 30
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  516)                    -9:00  US      AK%sT
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  517) Zone America/Nome  12:58:21 -     LMT     1867 Oct 18
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  518)                   -11:01:38 -     LMT     1900 Aug 20 12:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  519)                   -11:00  -       NST     1942
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  520)                   -11:00  US      N%sT    1946
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  521)                   -11:00  -       NST     1967 Apr
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  522)                   -11:00  -       BST     1969
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  523)                   -11:00  US      B%sT    1983 Oct 30 2:00
+c70861586 (Arthur David Olson 2004-05-27 12:00:29 -0400  524)                    -9:00  US      Y%sT    1983 Nov 30
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  525)                    -9:00  US      AK%sT
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  526) Zone America/Adak  12:13:21 -     LMT     1867 Oct 18
+8c987e961 (Arthur David Olson 2001-04-05 16:43:37 -0400  527)                   -11:46:38 -     LMT     1900 Aug 20 12:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  528)                   -11:00  -       NST     1942
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  529)                   -11:00  US      N%sT    1946
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  530)                   -11:00  -       NST     1967 Apr
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  531)                   -11:00  -       BST     1969
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  532)                   -11:00  US      B%sT    1983 Oct 30 2:00
+c70861586 (Arthur David Olson 2004-05-27 12:00:29 -0400  533)                   -10:00  US      AH%sT   1983 Nov 30
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  534)                   -10:00  US      HA%sT
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  535) # The following switches don't quite make our 1970 cutoff.
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  536) #
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  537) # Shanks writes that part of southwest Alaska (e.g. Aniak)
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  538) # switched from -11:00 to -10:00 on 1968-09-22 at 02:00,
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  539) # and another part (e.g. Akiak) made the same switch five weeks later.
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  540) #
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  541) # From David Flater (2004-11-09):
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  542) # In e-mail, 2004-11-02, Ray Hudson, historian/liaison to the Unalaska
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  543) # Historic Preservation Commission, provided this information, which
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  544) # suggests that Unalaska deviated from statutory time from early 1967
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  545) # possibly until 1983:
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  546) #
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  547) #  Minutes of the Unalaska City Council Meeting, January 10, 1967:
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  548) #  "Except for St. Paul and Akutan, Unalaska is the only important
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  549) #  location not on Alaska Standard Time.  The following resolution was
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  550) #  made by William Robinson and seconded by Henry Swanson:  Be it
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  551) #  resolved that the City of Unalaska hereby goes to Alaska Standard
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  552) #  Time as of midnight Friday, January 13, 1967 (1 A.M. Saturday,
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  553) #  January 14, Alaska Standard Time.)  This resolution was passed with
+d92554e7f (Arthur David Olson 2005-01-17 18:34:51 -0500  554) #  three votes for and one against."
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  555)
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  556) # Hawaii
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  557)
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  558) # From Arthur David Olson (2010-12-09):
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  559) # "Hawaiian Time" by Robert C. Schmitt and Doak C. Cox appears on pages 207-225
+f9a851fee (Arthur David Olson 2011-01-24 12:48:21 -0500  560) # of volume 26 of The Hawaiian Journal of History (1992). As of 2010-12-09,
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  561) # the article is available at
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  562) # <a href="http://evols.library.manoa.hawaii.edu/bitstream/10524/239/2/JL26215.pdf">
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  563) # http://evols.library.manoa.hawaii.edu/bitstream/10524/239/2/JL26215.pdf
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  564) # </a>
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  565) # and indicates that standard time was adopted effective noon, January
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  566) # 13, 1896 (page 218), that in "1933, the Legislature decreed daylight
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  567) # saving for the period between the last Sunday of each April and the
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  568) # last Sunday of each September, but less than a month later repealed the
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  569) # act," (page 220), that year-round daylight saving time was in effect
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  570) # from 1942-02-09 to 1945-09-30 (page 221, with no time of day given for
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  571) # when clocks changed) and that clocks were changed by 30 minutes
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  572) # effective the second Sunday of June, 1947 (page 219, with no time of
+5a453c138 (Arthur David Olson 2010-12-16 16:58:31 -0500  573) # day given for when clocks changed). A footnote for the 1933 changes
+5a453c138 (Arthur David Olson 2010-12-16 16:58:31 -0500  574) # cites Session Laws of Hawaii 1933, "Act. 90 (approved 26 Apr. 1933)
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  575) # and Act 163 (approved 21 May 1933)."
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  576)
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  577) # From Arthur David Olson (2011-01-19):
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  578) # The following is from "Laws of the Territory of Hawaii Passed by the
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  579) # Seventeenth Legislature: Regular Session 1933," available (as of
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  580) # 2011-01-19) at American University's Pence Law Library. Page 85: "Act
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  581) # 90...At 2 o'clock ante meridian of the last Sunday in April of each
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  582) # year, the standard time of this Territory shall be advanced one
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  583) # hour...This Act shall take effect upon its approval. Approved this 26th
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  584) # day of April, A. D. 1933. LAWRENCE M JUDD, Governor of the Territory of
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  585) # Hawaii." Page 172:  "Act 163...Act 90 of the Session Laws of 1933 is
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  586) # hereby repealed...This Act shall take effect upon its approval, upon
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  587) # which date the standard time of this Territory shall be restored to
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  588) # that existing immediately prior to the taking effect of said Act 90.
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  589) # Approved this 21st day of May, A. D. 1933. LAWRENCE M. JUDD, Governor
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  590) # of the Territory of Hawaii."
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  591) #
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  592) # Note that 1933-05-21 was a Sunday.
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  593) # We're left to guess the time of day when Act 163 was approved; guess noon.
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  594)
+617ecc28d (Arthur David Olson 2010-12-09 20:07:45 -0500  595) Zone Pacific/Honolulu     -10:31:26 -     LMT     1896 Jan 13 12:00 #Schmitt&Cox
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  596)                   -10:30  -       HST     1933 Apr 30 2:00 #Laws 1933
+b2cef0068 (Arthur David Olson 2011-01-19 14:16:52 -0500  597)                   -10:30  1:00    HDT     1933 May 21 12:00 #Laws 1933+12
+51bfd57d4 (Arthur David Olson 2011-01-19 17:33:58 -0500  598)                   -10:30  -       HST     1942 Feb 09 2:00 #Schmitt&Cox+2
+fe5f6d43b (Arthur David Olson 2011-08-17 13:49:32 -0400  599)                   -10:30  1:00    HDT     1945 Sep 30 2:00 #Schmitt&Cox+2
+fe5f6d43b (Arthur David Olson 2011-08-17 13:49:32 -0400  600)                   -10:30  -       HST     1947 Jun  8 2:00 #Schmitt&Cox+2
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  601)                   -10:00  -       HST
+1c4fb1411 (Arthur David Olson 1986-03-02 21:03:02 -0500  602)
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  603) # Now we turn to US areas that have diverged from the consensus since 1970.
+02eef26da (Arthur David Olson 1986-03-03 22:48:03 -0500  604)
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  605) # Arizona mostly uses MST.
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  606)
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  607) # From Paul Eggert (2002-10-20):
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  608) #
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  609) # The information in the rest of this paragraph is derived from the
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  610) # <a href="http://www.dlapr.lib.az.us/links/daylight.htm">
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  611) # Daylight Saving Time web page (2002-01-23)</a> maintained by the
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  612) # Arizona State Library, Archives and Public Records.
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  613) # Between 1944-01-01 and 1944-04-01 the State of Arizona used standard
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  614) # time, but by federal law railroads, airlines, bus lines, military
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  615) # personnel, and some engaged in interstate commerce continued to
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  616) # observe war (i.e., daylight saving) time.  The 1944-03-17 Phoenix
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  617) # Gazette says that was the date the law changed, and that 04-01 was
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  618) # the date the state's clocks would change.  In 1945 the State of
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  619) # Arizona used standard time all year, again with exceptions only as
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  620) # mandated by federal law.  Arizona observed DST in 1967, but Arizona
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  621) # Laws 1968, ch. 183 (effective 1968-03-21) repealed DST.
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  622) #
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  623) # Shanks says the 1944 experiment came to an end on 1944-03-17.
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  624) # Go with the Arizona State Library instead.
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  625)
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400  626) Zone America/Phoenix      -7:28:18 -      LMT     1883 Nov 18 11:31:42
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  627)                   -7:00   US      M%sT    1944 Jan  1 00:01
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  628)                   -7:00   -       MST     1944 Apr  1 00:01
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  629)                   -7:00   US      M%sT    1944 Oct  1 00:01
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  630)                   -7:00   -       MST     1967
+131ad475e (Arthur David Olson 2003-03-24 09:30:03 -0500  631)                   -7:00   US      M%sT    1968 Mar 21
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  632)                   -7:00   -       MST
+aeffd1ab3 (Arthur David Olson 1996-09-08 19:56:36 -0400  633) # From Arthur David Olson (1988-02-13):
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  634) # A writer from the Inter Tribal Council of Arizona, Inc.,
+4769a0952 (Arthur David Olson 2003-10-28 16:05:54 -0500  635) # notes in private correspondence dated 1987-12-28 that "Presently, only the
+38564c9af (Arthur David Olson 1988-01-02 16:03:08 -0500  636) # Navajo Nation participates in the Daylight Saving Time policy, due to its
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500  637) # large size and location in three states."  (The "only" means that other
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500  638) # tribal nations don't use DST.)
+81be53c16 (Paul Eggert        2013-08-26 07:57:44 -0700  639) #
+81be53c16 (Paul Eggert        2013-08-26 07:57:44 -0700  640) # From Paul Eggert (2013-08-26):
+81be53c16 (Paul Eggert        2013-08-26 07:57:44 -0700  641) # See America/Denver for a zone appropriate for the Navajo Nation.
+1589510c3 (Arthur David Olson 1995-12-21 11:45:54 -0500  642)
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  643) # Southern Idaho (Ada, Adams, Bannock, Bear Lake, Bingham, Blaine,
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  644) # Boise, Bonneville, Butte, Camas, Canyon, Caribou, Cassia, Clark,
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  645) # Custer, Elmore, Franklin, Fremont, Gem, Gooding, Jefferson, Jerome,
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  646) # Lemhi, Lincoln, Madison, Minidoka, Oneida, Owyhee, Payette, Power,
+63b23003f (Arthur David Olson 2007-08-20 10:45:09 -0400  647) # Teton, Twin Falls, Valley, Washington counties, and the southern
+63b23003f (Arthur David Olson 2007-08-20 10:45:09 -0400  648) # quarter of Idaho county) and eastern Oregon (most of Malheur County)
+feecde3a5 (Arthur David Olson 2003-12-15 09:31:41 -0500  649) # switched four weeks late in 1974.
+45a996fad (Arthur David Olson 2005-01-31 14:06:06 -0500  650) #
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  651) # Zone    NAME            GMTOFF  RULES   FORMAT  [UNTIL]
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400  652) Zone America/Boise        -7:44:49 -      LMT     1883 Nov 18 12:15:11
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  653)                   -8:00   US      P%sT    1923 May 13 2:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  654)                   -7:00   US      M%sT    1974
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  655)                   -7:00   -       MST     1974 Feb  3 2:00
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  656)                   -7:00   US      M%sT
+38564c9af (Arthur David Olson 1988-01-02 16:03:08 -0500  657)
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  658) # Indiana
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  659) #
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400  660) # For a map of Indiana's time zone regions, see:
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400  661) # <a href="http://www.mccsc.edu/time.html">
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400  662) # What time is it in Indiana?
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  663) # </a> (2006-03-01)
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  664) #
+63b23003f (Arthur David Olson 2007-08-20 10:45:09 -0400  665) # From Paul Eggert (2007-08-17):
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  666) # Since 1970, most of Indiana has been like America/Indiana/Indianapolis,
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  667) # with the following exceptions:
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  668) #
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  669) # - Gibson, Jasper, Lake, LaPorte, Newton, Porter, Posey, Spencer,
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  670) #   Vandenburgh, and Warrick counties have been like America/Chicago.
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  671) #
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  672) # - Dearborn and Ohio counties have been like America/New_York.
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  673) #
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  674) # - Clark, Floyd, and Harrison counties have been like
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  675) #   America/Kentucky/Louisville.
+54ae72e0e (Arthur David Olson 2005-08-29 11:54:30 -0400  676) #
+63b23003f (Arthur David Olson 2007-08-20 10:45:09 -0400  677) # - Crawford, Daviess, Dubois, Knox, Martin, Perry, Pike, Pulaski, Starke,
+63b23003f (Arthur David Olson 2007-08-20 10:45:09 -0400  678) #   and Switzerland counties have their own time zone histories as noted below.
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400  679) #
+c344c562c (Arthur David Olson 2006-01-30 08:59:12 -0500  680) # Shanks partitioned Indiana into 345 regions, each with its own time history,
+c344c562c (Arthur David Olson 2006-01-30 08:59:12 -0500  681) # and wrote ``Even newspaper reports present contradictory information.''
+23ed2d7fd (Arthur David Olson 2006-04-03 10:04:43 -0400  682) # Those Hoosiers!  Such a flighty and changeable people!
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  683) # Fortunately, most of the complexity occurred before our cutoff date of 1970.
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  684) #
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  685) # Other than Indianapolis, the Indiana place names are so nondescript
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  686) # that they would be ambiguous if we left them at the `America' level.
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500  687) # So we reluctantly put them all in a subdirectory `America/Indiana'.
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500  688)
+7206869a5 (Arthur David Olson 2005-08-22 12:05:25 -0400  689) # From Paul Eggert (2005-08-16):
+c344c562c (Arthur David Olson 2006-01-30 08:59:12 -0500  690) # http://www.mccsc.edu/time.html says that Indiana will use DST starting 2006.
+c344c562c (Arthur David Olson 2006-01-30 08:59:12 -0500  691) ~
+
+Of course there was even more: Then I found this -> c344c562c (Arthur David Olson 2006-01-30 08:59:12 -0500  680) # Shanks partitioned Indiana into 345 regions, each with its own time history,
+
+Curious, now I decided to check what exactly Arthur David Olson commited using that commit ID:
+
+8.) I then used git show again. -> I got this result:
+
+harrisdoan@s-164-67-81-219 tz % git show c344c562c
+commit c344c562c19dbdc905bb3edb3faa78cdf509ba2d
+Author: Arthur David Olson <olsona@elsie>
+Date:   Mon Jan 30 08:59:12 2006 -0500
+
+    Eggert mods
+    
+    SCCS-file: northamerica
+    SCCS-SID: 7.88
+
+diff --git a/northamerica b/northamerica
+index e60e9107..c491e71e 100644
+--- a/northamerica
++++ b/northamerica
+@@ -321,6 +321,14 @@ Zone America/Chicago       -5:50:36 -      LMT     1883 Nov 18 12:09:24
+ Zone America/North_Dakota/Center -6:45:12 - LMT        1883 Nov 18 12:14:48
+                        -7:00   US      M%sT    1992 Oct 25 02:00
+                        -6:00   US      C%sT
++# From Paul Eggert (2006-01-20):
++# The following is not implemented yet.
++# What is the most populous city in that area?
++# From http://www.statoids.com/tus.html (2006-01-20):
++# 2003-10-26 02:00: All of Morton County, ND, and the part of Sioux
++# County, ND east of ND route 31 moved from MT to CT.  (The area
++# around Fort Yates in Sioux County and the area around Mandan in
++# Morton County were already in CT.)
+ 
+ # US mountain time, represented by Denver
+ #
+@@ -519,9 +527,9 @@ Zone America/Boise  -7:44:49 -      LMT     1883 Nov 18 12:15:11
+ # For a map of Indiana's time zone regions, see:
+ # <a href="http://www.mccsc.edu/time.html">
+ # What time is it in Indiana?
+-# </a> (2005-05-03)
++# </a> (2005-10-30)
+ #
+-# From Paul Eggert (2005-08-22):
++# From Paul Eggert (2006-01-20):
+ # Since 1970, most of Indiana has been like America/Indiana/Indianapolis,
+ # with the following exceptions:
+ #
+@@ -533,11 +541,14 @@ Zone America/Boise        -7:44:49 -      LMT     1883 Nov 18 12:15:11
+ # - Clark, Floyd, and Harrison counties have been like
+ #   America/Kentucky/Louisville.
+ #
+-# - Crawford, Starke, and Switzerland counties have their own time zone
++# - Daviess, Dubois, Knox, Martin, Perry, and Pulaski counties
++#   have been like America/Indiana/Vincennes.
++#
++# - Crawford, Pike, Starke, and Switzerland counties have their own time zone
+ #   histories as noted below.
+ #
+-# Shanks partitions Indiana into 345 regions, each with its own time history,
+-# and writes ``Even newspaper reports present contradictory information.''
++# Shanks partitioned Indiana into 345 regions, each with its own time history,
++# and wrote ``Even newspaper reports present contradictory information.''
+ # Fortunately, most of the complexity occurred before our cutoff date of 1970.
+ #
+ # Other than Indianapolis, the Indiana place names are so nondescript
+@@ -545,11 +556,19 @@ Zone America/Boise        -7:44:49 -      LMT     1883 Nov 18 12:15:11
+ # So we reluctantly put them all in a subdirectory `America/Indiana'.
+ 
+ # From Paul Eggert (2005-08-16):
+-# http://www.mccsc.edu/time.html says that Indiana will use DST starting 2006,
+-# and that many counties may switch either to Central or to Eastern time.
+-# The county-by-county decisions have not been made yet, so for now assume
+-# that no counties will switch: this assumption is most likely wrong,
+-# but it's the best we can do for now.
++# http://www.mccsc.edu/time.html says that Indiana will use DST starting 2006.
++
++# From Deborah Goldsmith (2006-01-18):
++# http://dmses.dot.gov/docimages/pdf95/382329_web.pdf
++# From Paul Eggert (2006-01-20):
++# It says "DOT is relocating the time zone boundary in Indiana to move Starke,
++# Pulaski, Knox, Daviess, Martin, Pike, Dubois, and Perry Counties from the
++# Eastern Time Zone to the Central Time Zone.... The effective date of
++# this rule is 2:OO a.m. EST Sunday, April 2, 2006, which is the
++# changeover date from standard time to Daylight Saving Time."
++# Strictly speaking, this means the affected counties will change their
++# clocks twice that night, but this obviously is in error.  The intent
++# is that 01:59:59 EST be followed by 02:00:00 CDT.
+
+
+All this man did was change "writes" to "wrote."
+
+
+9.) Time to dig even deeper. I decided to once again git blame and did so. This was my result:
+
+-0400   11) # A reliable and entertaining source about time zones is
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   12) # Derek Howse, Greenwich time and longitude, Philip Wilson Publishers (1997).
+6a1980c96 (Arthur David Olson 1994-08-20 12:55:19 -0400   13)
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500   14) ###############################################################################
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500   15)
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500   16) # United States
+10f93774d (Arthur David Olson 1988-02-13 12:20:22 -0500   17)
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   18) # From Paul Eggert (1999-03-31):
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   19) # Howse writes (pp 121-125) that time zones were invented by
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   20) # Professor Charles Ferdinand Dowd (1825-1904),
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   21) # Principal of Temple Grove Ladies' Seminary (Saratoga Springs, NY).
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   22) # His pamphlet ``A System of National Time for Railroads'' (1870)
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   23) # was the result of his proposals at the Convention of Railroad Trunk Lines
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   24) # in New York City (1869-10).  His 1870 proposal was based on Washington, DC,
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   25) # but in 1872-05 he moved the proposed origin to Greenwich.
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   26) # His proposal was adopted by the railroads on 1883-11-18 at 12:00,
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   27) # and the most of the country soon followed suit.
+f397ee500 (Arthur David Olson 1999-08-17 14:08:58 -0400   28)
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   29) # From Paul Eggert (2005-04-16):
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   30) # That 1883 transition occurred at 12:00 new time, not at 12:00 old time.
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   31) # See p 46 of David Prerau, Seize the daylight, Thunder's Mouth Press (2005).
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   32)
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   33) # From Paul Eggert (1995-12-19):
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   34) # A good source for time zone historical data in the US is
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   35) # Thomas G. Shanks, The American Atlas (5th edition),
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   36) # San Diego: ACS Publications, Inc. (1991).
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   37) # Make sure you have the errata sheet; the book is somewhat useless without it.
+cdc27f253 (Arthur David Olson 2005-04-21 15:03:53 -0400   38) # It is the source for most of the pre-1991 US and Puerto Rico entries below.
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   39)
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500   40) # From Paul Eggert (2001-03-06):
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   41) # Daylight Saving Time was first suggested as a joke by Benjamin Franklin
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500   42) # in his whimsical essay ``An Economical Project for Diminishing the Cost
+b212883a4 (Arthur David Olson 2001-03-13 12:32:22 -0500   43) # of Light'' published in the Journal de Paris (1784-04-26).
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   44) # Not everyone is happy with the results:
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   45) #
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   46) # I don't really care how time is reckoned so long as there is some
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   47) # agreement about it, but I object to being told that I am saving
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   48) # daylight when my reason tells me that I am doing nothing of the kind.
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   49) # I even object to the implication that I am wasting something
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   50) # valuable if I stay in bed after the sun has risen.  As an admirer
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   51) # of moonlight I resent the bossy insistence of those who want to
+ff2bea583 (Arthur David Olson 1996-06-13 09:02:49 -0400   52) # reduce my time for enjoying it.  At the back of the Daylight Saving~B
+B
+
+From here I seen these:
+
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   34) # A good source for time zone historical data in the US is
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   35) # Thomas G. Shanks, The American Atlas (5th edition),
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   36) # San Diego: ACS Publications, Inc. (1991).
+c12b43274 (Arthur David Olson 1995-12-21 11:43:42 -0500   37) # Make sure you have the errata sheet; the book is somewhat useless without it.
+
+
+Our ID of interest now being c12b43274...
+
+10.) One last time, I ran another git show: git show c12b43274
+
+harrisdoan@s-164-67-81-219 tz % git show c12b43274
+
+commit c12b432741eed9a422fbf99fa27af6e7a941d88b
+Author: Arthur David Olson <ado@elsie>
+Date:   Thu Dec 21 11:43:42 1995 -0500
+
+    Eggert changes
+    
+    SCCS-file: northamerica
+    SCCS-SID: 7.20
+
+diff --git a/northamerica b/northamerica
+index 92b55af3..9b8a5ec8 100644
+--- a/northamerica
++++ b/northamerica
+@@ -14,25 +14,24 @@
+ 
+ # United States
+ 
++# From Paul Eggert <eggert@twinsun.com> (1995-12-19):
++# A good source for time zone historical data in the US is
++# Thomas G. Shanks, The American Atlas (5th edition),
++# San Diego: ACS Publications, Inc. (1991).
++# Make sure you have the errata sheet; the book is somewhat useless without it.
++# It is the source for the US and Puerto Rico entries below.
++
+ # From Arthur David Olson:
+ # US Daylight Saving Time ended on the last Sunday of *October* in 1974.
+ # See, for example, the front page of the Saturday, October 26, 1974
+ # and Sunday, October 27, 1974 editions of the Washington Post.
+ 
+-# From seismo!munnari!kre:
+-# I recall also being told by someone once that Canada didn't have
+-# the DST variations in 74/75 that the US did, but I am not nearly
+-# sure enough of this to add anything.
+-
+-# From Arthur David Olson:
+-# The above has been confirmed by Bob Devine; we'll go with it here.
+-
+ # From Arthur David Olson:
+ # Before the Uniform Time Act of 1966 took effect in 1967, observance of
+ # Daylight Saving Time in the US was by local option, except during wartime.
+ 
+ # Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER/S
+-Rule   US      1918    1919    -       Mar     lastSun 2:00    1:00    D
++Rule   US      1918    1919    -       Mar     lastSun 2:00    1:00    W # War
+ Rule   US      1918    1919    -       Oct     lastSun 2:00    0       S
+ Rule   US      1942    only    -       Feb     9       2:00    1:00    W # War
+ Rule   US      1945    only    -       Sep     30      2:00    0       S
+@@ -55,6 +54,10 @@ Rule US      1987    max     -       Apr     Sun>=1  2:00    1:00    D
+ #    The YST zone now covers nearly all of the state, AHST just part
+ #    of the Aleutian islands.   No DST.
+ 
++# From Paul Eggert (1995-12-19):
++# The tables below use `NST', not `NT', for Nome Standard Time.
++# I invented `CAWT' for Central Alaska War Time.
++
+ # From U. S. Naval Observatory (January 19, 1989):
+ # USA  EASTERN       5 H  BEHIND UTC    NEW YORK, WASHINGTON
+ # USA  EASTERN       4 H  BEHIND UTC    APR 3 - OCT 30
+@@ -110,73 +113,316 @@ Rule     US      1987    max     -       Apr     Sun>=1  2:00    1:00    D
+ #      Hawaii-Aleutian standard time
+ #      Samoa standard time
+ # The law doesn't give abbreviations.
++#
++# From Paul Eggert (1995-12-19):
++# Shanks uses 1983-10-30, not 1983-11-30, for the 1983 transitions.
++# Go with Shanks.
++
++# US Eastern time, represented by New York
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule   NYC     1920    only    -       Mar     lastSun 2:00    1:00    D
++Rule   NYC     1920    only    -       Oct     lastSun 2:00    0       S
++Rule   NYC     1921    1966    -       Apr     lastSun 2:00    1:00    D
++Rule   NYC     1921    1954    -       Sep     lastSun 2:00    0       S
++Rule   NYC     1955    1966    -       Oct     lastSun 2:00    0       S
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/New_York  -4:56:02 -      LMT     1883 Nov 18 12:00
++                       -5:00   US      E%sT    1920
++                       -5:00   NYC     E%sT    1942
++                       -5:00   US      E%sT    1946
++                       -5:00   NYC     E%sT    1967
++                       -5:00   US      E%sT
++
++# US Central time, represented by Chicago
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule   Chicago 1920    only    -       Jun     13      2:00    1:00    D
++Rule   Chicago 1920    1921    -       Oct     lastSun 2:00    0       S
++Rule   Chicago 1921    only    -       Mar     lastSun 2:00    1:00    D
++Rule   Chicago 1922    1966    -       Apr     lastSun 2:00    1:00    D
++Rule   Chicago 1922    1954    -       Sep     lastSun 2:00    0       S
++Rule   Chicago 1955    1966    -       Oct     lastSun 2:00    0       S
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Chicago   -5:50:36 -      LMT     1883 Nov 18 12:00
++                       -6:00   US      C%sT    1920
++                       -6:00   Chicago C%sT    1936 Mar  1 2:00
++                       -5:00   -       EST     1936 Nov 15 2:00
++                       -6:00   Chicago C%sT    1942
++                       -6:00   US      C%sT    1946
++                       -6:00   Chicago C%sT    1967
++                       -6:00   US      C%sT
++
++# US Mountain time, represented by Denver
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule   Denver  1920    1921    -       Mar     lastSun 2:00    1:00    D
++Rule   Denver  1920    only    -       Oct     lastSun 2:00    0       S
++Rule   Denver  1921    only    -       May     22      2:00    0       S
++Rule   Denver  1965    1966    -       Apr     lastSun 2:00    1:00    D
++Rule   Denver  1965    1966    -       Oct     lastSun 2:00    0       S
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Denver    -6:59:56 -      LMT     1883 Nov 18 12:00
++                       -7:00   US      E%sT    1920
++                       -7:00   Denver  E%sT    1942
++                       -7:00   US      E%sT    1946
++                       -7:00   Denver  E%sT    1967
++                       -7:00   US      E%sT
++
++# US Pacific time, represented by Los Angeles
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule   CA      1948    only    -       Mar     14      2:00    1:00    D
++Rule   CA      1949    only    -       Jan      1      2:00    0       S
++Rule   CA      1950    1966    -       Apr     lastSun 2:00    1:00    D
++Rule   CA      1950    1961    -       Sep     lastSun 2:00    0       S
++Rule   CA      1962    1966    -       Oct     lastSun 2:00    0       S
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Los_Angeles -7:52:58 -    LMT     1883 Nov 18 12:00
++                       -8:00   US      P%sT    1946
++                       -8:00   CA      P%sT    1967
++                       -8:00   US      P%sT
+ 
+-# From Paul Eggert <eggert@twinsun.com> (August 16, 1994):
++# Alaska
++# AK%sT is the modern abbreviation for -9:00 per USNO.
++#
++# From Paul Eggert (1995-12-19):
+ # Howse writes that Alaska switched from the Julian to the Gregorian calendar,
+ # and from east-of-GMT to west-of-GMT days, in 1867 when the US purchased it
+-# from Russia.  We don't have this data pinned down yet, though.
+-
+-# Easy stuff first--including Alaska, where we ignore history (since we
+-# can't tell if we should give Yukon time or Alaska-Hawaii time for "old"
+-# times).
+-
++# from Russia.  We omit this transition, since we can't represent changes
++# from Julian to Gregorian.
++#
+ # Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
+-Zone America/New_York  -5:00   US      E%sT
+-Zone America/Chicago   -6:00   US      C%sT
+-Zone America/Denver    -7:00   US      M%sT
+-Zone America/Los_Angeles -8:00 US      P%sT
+-Zone America/Anchorage -9:00   US      AK%sT
+-                                       # AK%sT is the abbreviation per USNO
++Zone America/Juneau     -8:57:41 -     LMT     1900 Aug 20 12:00
++                        -8:00  -       PST     1942
++                        -8:00  US      P%sT    1946
++                        -8:00  -       PST     1969
++                        -8:00  US      P%sT    1983 Oct 30 2:00
++                        -9:00  US      AK%sT
++Zone America/Yakutat    -9:18:55 -     LMT     1900 Aug 20 12:00
++                        -9:00  -       YST     1942
++                        -9:00  US      Y%sT    1946
++                        -9:00  -       YST     1969
++                        -9:00  US      Y%sT    1983 Oct 30 2:00
++                        -9:00  US      AK%sT
++Zone America/Anchorage  -9:59:36 -     LMT     1900 Aug 20 12:00
++                       -10:00  -       CAT     1942
++                       -10:00  US      CAT/CAWT 1946
++                       -10:00  -       CAT     1967 Apr
++                       -10:00  -       AHST    1969
++                       -10:00  US      AH%sT   1983 Oct 30 2:00
++                        -9:00  US      AK%sT
++Zone America/Nome      -11:01:38 -     LMT     1900 Aug 20 12:00
++                       -11:00  -       NST     1942
++                       -11:00  US      N%sT    1946
++                       -11:00  -       NST     1967 Apr
++                       -11:00  -       BST     1969
++                       -11:00  US      B%sT    1983 Oct 30 2:00
++                        -9:00  US      AK%sT
++Zone America/Adak      -11:46:38 -     LMT     1900 Aug 20 12:00
++                       -11:00  -       NST     1942
++                       -11:00  US      N%sT    1946
++                       -11:00  -       NST     1967 Apr
++                       -11:00  -       BST     1969
++                       -11:00  US      B%sT    1983 Oct 30 2:00
++                       -10:00  US      HA%sT
++# Shanks writes that part of southwest Alaska (e.g. Aniak)
++# switched from -11:00 to -10:00 on 1968-09-22 at 02:00,
++# and another part (e.g. Akiak) made the same switch five weeks later.
++# These switches don't quite make our 1970 cutoff.
++
++# Hawaii
++#
++# From Arthur David Olson:
++# And then there's Hawaii.
++# DST was observed for one day in 1933;
++# standard time was changed by half an hour in 1947;
++# it's always standard as of 1986.
++#
++# From Paul Eggert:
++# Shanks says the 1933 experiment lasted for three weeks.  Go with Shanks.
++#
++Zone Pacific/Honolulu  -10:31:26 -     LMT     1900 Jan  1 12:00
++                       -10:30  -       HST     1933 Apr 30 2:00
++                       -10:30  1:00    HDT     1933 May 21 2:00
++                       -10:30  US      H%sT    1947 Jun  8 2:00
++                       -10:00  -       HST
+ 
+-# Mainland US areas that are always Standard as of 1986.
++Zone Pacific/Midway    -11:49:28 -     LMT     1901
++                       -11:00  -       NST     1967 Apr        # N=Nome
++                       -11:00  -       BST     1983 Nov 30     # B=Bering
++                       -11:00  -       SST                     # S=Samoa
+ 
+-Zone America/Fort_Wayne -5:00  US      E%sT    1946
+-                       -5:00   -       EST     # Always EST as of 1986
+-# From Arthur David Olson (October 28, 1991):
+-# An article on page A3 of the Sunday, October 27, 1991 Washington Post
+-# notes that Starke County switched from Central time to Eastern time as of
+-# October 27, 1991.
+-Zone America/Knox_IN   -6:00   US      C%sT    1991 Oct 27 2:00
+-                       -5:00   -       EST     # Always EST as of 1991
+-Zone America/Phoenix   -7:00   US      M%sT    1946
+-                       -7:00   -       MST     # Always MST as of 1986
++# Now we turn to US areas that have diverged from the consensus since 1970.
+ 
++# Arizona mostly uses MST.
++Zone America/Phoenix   -7:28:18 -      LMT     1883 Nov 18 12:00
++                       -7:00   US      M%sT    1944 Jan  1 00:01
++                       -7:00   -       MST     1944 Mar 17 00:01
++                       -7:00   US      M%sT    1944 Oct  1 00:01
++                       -7:00   -       MST     1967
++                       -7:00   US      M%sT    1968
++                       -7:00   -       MST
+ # From Arthur David Olson (February 13, 1988):
+-# However. . .a writer from the Inter Tribal Council of Arizona, Inc.,
++# A writer from the Inter Tribal Council of Arizona, Inc.,
+ # notes in private correspondence dated 12/28/87 that "Presently, only the
+ # Navajo Nation participates in the Daylight Saving Time policy, due to its
+ # large size and location in three states."  (The "only" means that other
+ # tribal nations don't use DST.)
+ 
+-Link   America/Denver  America/Shiprock
++# Southern Idaho and eastern Oregon switched four weeks late in 1974.
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Boise     -7:44:49 -      LMT     1883 Nov 18 12:00
++                       -8:00   US      P%sT    1923 May 13 2:00
++                       -7:00   US      M%sT    1974
++                       -7:00   -       MST     1974 Feb  3 2:00
++                       -7:00   US      M%sT
+ 
+-# From Bob Devine (January 28, 1988):
+-# Michigan didn't observe DST from 1968 to 1973.
++# Indiana
++#
++# From Paul Eggert (1995-12-19):
++# Indiana generally observes either EST all year, or CST/CDT,
++# but areas near Cincinnati and Louisville use those cities' timekeeping
++# and in 1969 and 1970 the whole state observed daylight time;
++# and there are other exceptions as noted below.
++# Shanks partitions Indiana into 345 regions, each with its own time history,
++# and writes ``Even newspaper reports present contradictory information.''
++# Fortunately, most of the complexity occurred before our cutoff date of 1970.
++#
++# Since 1970, EST-only Indiana has been like America/Indianapolis,
++# with exceptions noted below for Crawford, Starke, and Switzerland counties.
++# The parts of Indiana not listed below have been like America/Chicago,
++# America/Louisville, or America/New_York.
++#
++# Other than Indianapolis, the Indiana place names are so nondescript
++# that they would be ambiguous if we left them at the `America' level.
++# So we reluctantly put them all in a subdirectory `America/Indiana'.
++#
++# Most of EST-only Indiana last observed DST in 1970.
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule Indianapolis 1941 only    -       Jun     22      2:00    1:00    D
++Rule Indianapolis 1941 1954    -       Sep     lastSun 2:00    0       S
++Rule Indianapolis 1946 1954    -       Apr     lastSun 2:00    1:00    D
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Indianapolis -5:44:38 - LMT 1883 Nov 18 12:00
++                       -6:00   US      C%sT    1920
++                       -6:00 Indianapolis C%sT 1942
++                       -6:00   US      C%sT    1946
++                       -6:00 Indianapolis C%sT 1955 Apr 24 2:00
++                       -5:00   -       EST     1957 Sep 29 2:00
++                       -6:00   -       CST     1958 Apr 27 2:00
++                       -5:00   -       EST     1969
++                       -5:00   US      E%sT    1971
++                       -5:00   -       EST
++Link America/Indianapolis America/Indiana/Indianapolis
++#
++# Part of Crawford County, Indiana, last observed DST in 1975,
++# and left its clocks alone in 1974.
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule   Marengo 1951    only    -       Apr     lastSun 2:00    1:00    D
++Rule   Marengo 1951    only    -       Sep     lastSun 2:00    0       S
++Rule   Marengo 1954    1960    -       Apr     lastSun 2:00    1:00    D
++Rule   Marengo 1954    1960    -       Sep     lastSun 2:00    0       S
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Indiana/Marengo -5:45:23 -        LMT     1883 Nov 18 12:00
++                       -6:00   US      C%sT    1951
++                       -6:00   Marengo C%sT    1961 Apr 30 2:00
++                       -5:00   -       EST     1969
++                       -5:00   US      E%sT    1974 Jan  6 2:00
++                       -6:00   1:00    CDT     1974 Oct 27 2:00
++                       -5:00   US      E%sT    1976
++                       -5:00   -       EST
++#
++# Starke County, Indiana
++# From Arthur David Olson (October 28, 1991):
++# An article on page A3 of the Sunday, October 27, 1991 Washington Post
++# notes that Starke County switched from Central time to Eastern time as of
++# October 27, 1991.
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule   Starke  1947    1961    -       Apr     lastSun 2:00    1:00    D
++Rule   Starke  1947    1954    -       Sep     lastSun 2:00    0       S
++Rule   Starke  1955    1956    -       Oct     lastSun 2:00    0       S
++Rule   Starke  1957    1958    -       Sep     lastSun 2:00    0       S
++Rule   Starke  1959    1961    -       Oct     lastSun 2:00    0       S
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Indiana/Knox -5:46:30 -   LMT     1883 Nov 18 12:00
++                       -6:00   US      C%sT    1947
++                       -6:00   Starke  C%sT    1962 Apr 29 2:00
++                       -5:00   -       EST     1963 Oct 27 2:00
++                       -6:00   US      C%sT    1991 Oct 27 2:00
++                       -5:00   -       EST
++#
++# Switzerland County, Indiana, last observed DST in 1972.
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Indiana/Vevay -5:40:16 -  LMT     1883 Nov 18 12:00
++                       -6:00   US      C%sT    1954 Apr 25 2:00
++                       -5:00   -       EST     1969
++                       -5:00   US      E%sT    1973
++                       -5:00   -       EST
+ 
+-Zone America/Detroit   -5:00   US      E%sT    1968
+-                       -5:00   -       EST     1973
++# Part of Kentucky left its clocks alone in 1974.
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule Louisville        1921    only    -       May     1       2:00    1:00    D
++Rule Louisville        1921    only    -       Sep     1       2:00    0       S
++Rule Louisville        1941    1961    -       Apr     lastSun 2:00    1:00    D
++Rule Louisville        1941    only    -       Sep     lastSun 2:00    0       S
++Rule Louisville        1946    only    -       Jun     2       2:00    0       S
++Rule Louisville        1950    1955    -       Sep     lastSun 2:00    0       S
++Rule Louisville        1956    1960    -       Oct     lastSun 2:00    0       S
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Louisville        -5:43:02 -      LMT     1883 Nov 18 12:00
++                       -6:00   US      C%sT    1921
++                       -6:00 Louisville C%sT   1942
++                       -6:00   US      C%sT    1946
++                       -6:00 Louisville C%sT   1961 Jul 23 2:00
++                       -5:00   -       EST     1968
++                       -5:00   US      E%sT    1974 Jan  6 2:00
++                       -6:00   1:00    CDT     1974 Oct 27 2:00
+                        -5:00   US      E%sT
+ 
+-Zone Pacific/Midway    -11:49:28 -     LMT     1901
+-                       -11:00  -       NST     1967 Apr        # N=Nome
+-                       -11:00  -       BST     1983 Nov 30     # B=Bering
+-                       -11:00  -       SST                     # S=Samoa
+-
+-# Aleutian has a name change.  DST, per Naval Observatory.
+-
+-Zone America/Atka      -10:00  US      AH%sT   1983 Nov 30
+-                       -10:00  US      HA%sT
+-
+-# From Arthur David Olson:
+-# And then there's Hawaii.
+-# DST was observed for one day in 1933;
+
+
+I then found this... after scrolling and reading through all the messages, I found one particularly from Paul Eggert on December 19, 1995 in which we find our phrase.
+
+
++# From Paul Eggert (1995-12-19):
++# Indiana generally observes either EST all year, or CST/CDT,
++# but areas near Cincinnati and Louisville use those cities' timekeeping
++# and in 1969 and 1970 the whole state observed daylight time;
++# and there are other exceptions as noted below.
++# Shanks partitions Indiana into 345 regions, each with its own time history,
++# and writes ``Even newspaper reports present contradictory information.''
++# Fortunately, most of the complexity occurred before our cutoff date of 1970.
++#
++# Since 1970, EST-only Indiana has been like America/Indianapolis,
++# with exceptions noted below for Crawford, Starke, and Switzerland counties.
++# The parts of Indiana not listed below have been like America/Chicago,
++# America/Louisville, or America/New_York.
++#
++# Other than Indianapolis, the Indiana place names are so nondescript
++# that they would be ambiguous if we left them at the `America' level.
++# So we reluctantly put them all in a subdirectory `America/Indiana'.
++#
++# Most of EST-only Indiana last observed DST in 1970.
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule Indianapolis 1941 only    -       Jun     22      2:00    1:00    D
++Rule Indianapolis 1941 1954    -       Sep     lastSun 2:00    0       S
++Rule Indianapolis 1946 1954    -       Apr     lastSun 2:00    1:00    D
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Indianapolis -5:44:38 - LMT 1883 Nov 18 12:00
++                       -6:00   US      C%sT    1920
++                       -6:00 Indianapolis C%sT 1942
++                       -6:00   US      C%sT    1946
++                       -6:00 Indianapolis C%sT 1955 Apr 24 2:00
++                       -5:00   -       EST     1957 Sep 29 2:00
++                       -6:00   -       CST     1958 Apr 27 2:00
++                       -5:00   -       EST     1969
++                       -5:00   US      E%sT    1971
++                       -5:00   -       EST
++Link America/Indianapolis America/Indiana/Indianapolis
++#
++# Part of Crawford County, Indiana, last observed DST in 1975,
++# and left its clocks alone in 1974.
++# Rule NAME    FROM    TO      TYPE    IN      ON      AT      SAVE    LETTER
++Rule   Marengo 1951    only    -       Apr     lastSun 2:00    1:00    D
++Rule   Marengo 1951    only    -       Sep     lastSun 2:00    0       S
++Rule   Marengo 1954    1960    -       Apr     lastSun 2:00    1:00    D
++Rule   Marengo 1954    1960    -       Sep     lastSun 2:00    0       S
++# Zone NAME            GMTOFF  RULES   FORMAT  [UNTIL]
++Zone America/Indiana/Marengo -5:45:23 -        LMT     1883 Nov 18 12:00
++                       -6:00   US      C%sT    1951
++                       -6:00   Marengo C%sT    1961 Apr 30 2:00
++                       -5:00   -       EST     1969
++                       -5:00   US      E%sT    1974 Jan  6 2:00
++                       -6:00   1:00    CDT     1974 Oct 27 2:00
++                       -5:00   US      E%sT    1976
++                       -5:00   -       EST
+
+This was all found at commit ID: c12b43274

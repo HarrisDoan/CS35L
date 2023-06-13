@@ -1,0 +1,22 @@
+1.) First I found the corresponding commit ID which was -> 0b55d930a69692c7f4e7b90e35fa41f6c46df4bc
+
+To find this all you had to do was use the git log command:
+
+git log v2.38.0..v2.39.0 --grep="merge-tree\|segfault"
+
+We use v2.38.0 and v2.39.0 beacuse these are the two versions when the new code changes occurs. Then we look maybe for a comment of message on "merge tree" and "segfault."
+
+
+2.) I eventually found a commit where a branch called merge-ort-in-read-only-repo was merged into maint-2.38. This was merged to fix a segementation fault in read-only respositories.
+
+3.) I dug deeper and found the actual commit ID that corresponded to this exact fix: 0b55d930a69692c7f4e7b90e35fa41f6c46df4bc
+
+4.) The title was: merge-ort: fix segmentation fault in read-only repositories
+
+5.) Then looking at the changes it seems the changing of static void to static int and making sure their is a default int return pathway lead to this fix.
+
+Changes: on September 28, 2022
+
+Reviewed-by: Elijah Newren <newren@gmail.com>
+Signed-off-by: Johannes Schindelin <johannes.schindelin@gmx.de>
+Signed-off-by: Junio C Hamano <gitster@pobox.com>

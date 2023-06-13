@@ -1,0 +1,127 @@
+Harris Doan: 605317270
+
+Exercise 2.1
+
+1.)Writing in the scratch buffer: (* (expt 2 (-607 1)) (- (expt 2 607) 1) )
+
+2.) Evaluating bits needed to represent this:
+    (+ (logb (* (expt 2 (- 607 1)) (- (expt 2 607) 1) ) ) 1)
+
+--> This ends up giving us a total of 1213 bits!
+
+3.) When I typed in the command a description appears. The command runs a describe-key in whcih it displays the documentation of the function invoked by KEY-LIST. This happens because the command brings up this documentation because the C-h k command is telling us what the C-h k command does.
+
+4.) The same thing occured for this. A description appeared. This occurs because we are requesting a descriptor of what M-SPC does through C-h k. M-SPC deletes all the whitespaces and tabs around a certain point, leaving a single space or n-spaces. If n happens to be negative, newlines will subsequently deleted as well. This leaves a total of -n spaces. The general way to go about M-SPC is cycle-spacing.
+
+HW: Python Scripting
+
+1.) What happens when this script is invoked on an empty file like /dev/null, and why?
+
+When invoked on an empty file, you are presented with an index error. This is due to the randline function since it tries to randomly select a line, but since an empty file has no lines an error is thrown.
+
+2.) What happens when this script is invoked with Python 3 rather than Python 2, and why?
+
+When ran in Python 3, a syntax error is thrown. This is due to an error of IOError in which the tuple unpacking of exceptions is not a valid tuple anymore. This causes an error.
+
+
+When ran in Python 2, another error is thrown due to a non-ASCII character '\xe2' in file. shuf.py utilizes PEP636, which is a structural pattern matching implemented in September 2020 which far predates Python 2 which casues the error.
+
+
+3.)
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Predecessor to Python3:
+[harris@lnxsrv12 ~/CS35L/assign2]$ time /usr/bin/python3 shuf.py < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m1.035s
+user	0m0.983s
+sys	    0m0.028s
+[harris@lnxsrv12 ~/CS35L/assign2]$ time /usr/bin/python3 shuf.py < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m1.024s
+user	0m0.975s
+sys	    0m0.042s
+[harris@lnxsrv12 ~/CS35L/assign2]$ time /usr/bin/python3 shuf.py < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m1.007s
+user	0m0.963s
+sys	    0m0.039s
+
+Sum of user and sys: 
+1.011
+1.017
+1.002
+
+In order:
+1.002
+1.011
+1.017
+
+Median: 1.011
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Python 3.11 and Later:
+[harris@lnxsrv12 ~/CS35L/assign2]$ time /usr/local/cs/bin/python3 shuf.py < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m0.750s
+user	0m0.678s
+sys	    0m0.041s
+[harris@lnxsrv12 ~/CS35L/assign2]$ time /usr/local/cs/bin/python3 shuf.py < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m0.726s
+user	0m0.673s
+sys	    0m0.041s
+[harris@lnxsrv12 ~/CS35L/assign2]$ time /usr/local/cs/bin/python3 shuf.py < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m0.729s
+user	0m0.677s
+sys	    0m0.039s
+
+Sum of user and sys: 
+0.719
+0.714
+0.716
+
+In order:
+0.714
+0.716
+0.719
+
+Median: 0.716
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Coreutils:
+[harris@lnxsrv12 ~/CS35L/assign2]$ time shuf < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m0.064s
+user	0m0.056s
+sys	    0m0.007s
+[harris@lnxsrv12 ~/CS35L/assign2]$ time shuf < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m0.063s
+user	0m0.052s
+sys	    0m0.011s
+[harris@lnxsrv12 ~/CS35L/assign2]$ time shuf < /usr/share/unicode/ucd/BidiTest.txt > /dev/null
+
+real	0m0.069s
+user	0m0.058s
+sys	    0m0.011s
+
+Sum of user and sys: 
+0.063
+0.063
+0.069
+
+In order:
+0.063
+0.063
+0.069
+
+Median: 0.063
+

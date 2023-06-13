@@ -1,0 +1,68 @@
+1.) First step was to modify the 'make check' in the Makefile. Since 
+I believe in test-driven development, that was the first thing I tackled.
+
+Since the simplest one from the spec was to check for the correct output of 
+the number of bytes, I did that as a check. (./randall 1 | wc -c) -eq 1 
+And then I could echo a pass or fail.
+
+2.) The next step was to analyze and see what randall.c was actually doing.
+There was a lot of snippets of code that I began to recognize that could be
+separated into header and c files. 
+
+So, I began to split up the code into header and c files like what the spec wanted.
+In the process, I made all the accompanying header files and made sure not to forget
+the #include ".h" part so that the code would work. I also took note that the random
+number generator for hardware for example did not need an I/O stream, so I made sure 
+stdio.h was not included. I also made sure to get rid of any instances of "static" 
+because that was something we didn't want.
+
+To make sure that the splitting up worked and that I didn't mess anything up, I fixed
+the randall command in the Makefile so that it compiled all the necessary files together.
+
+randall: randall.c 
+	$(CC) $(CFLAGS) randall.c rand64-hw.c rand64-sw.c output.c options.c -o $@
+
+In the option.c file, I wrote a function that gets all the options available to randall.
+
+Started with the -i and -o options. Used loops to iterate across all possible arguments
+and set proper flags using pointers. Using getopt to get the required options 
+and set proper nbytes for each case. With the -o option, I made sure appropriate error messages 
+popped up so the user knew what was wrong. 
+
+3.) To handle the tarball and the git, these commands in the Makefile exist. Just needed modifications 
+based on what files I had in my repoistory.
+
+submission-tarball: randall-submission.$(TAREXT)
+submission-files = $(assignment-files) notes.txt
+randall-submission.$(TAREXT): $(submission-files)
+	$(TAR) $(TARFLAGS) -cf $@ $(submission-files)
+
+repository-tarball:
+	$(TAR) -czf randall-git.tgz .git
+
+-----------------------------------------------------------------------------------------------------------------
+
+Timings Test:
+
+[harris@lnxsrv12 ~/CS35L/assign5/randall]$ time dd if=/dev/urandom ibs=8192 obs=8192 count=16384 >/dev/null
+16384+0 records in
+16384+0 records out
+134217728 bytes (134 MB, 128 MiB) copied, 0.917342 s, 146 MB/s
+
+[harris@lnxsrv12 ~/CS35L/assign5/randall]$ time ./randall 133562368 >/dev/null
+
+real    0m3.626s
+user    0m3.505s
+sys     0m0.064s
+
+[harris@lnxsrv12 ~/CS35L/assign5/randall]$ time ./randall 133562368 | cat >/dev/null
+
+real    0m3.877s
+user    0m3.682s
+sys     0m0.283s
+
+[harris@lnxsrv12 ~/CS35L/assign5/randall]$ time ./randall 133562368 >rand.data
+
+real    0m3.658s
+user    0m3.533s
+sys     0m0.227s
